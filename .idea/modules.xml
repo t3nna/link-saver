@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/link-sever-sessions.iml" filepath="$PROJECT_DIR$/.idea/link-sever-sessions.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../link-saver-sessions/.idea/link-saver-sessions.iml" filepath="$PROJECT_DIR$/../link-saver-sessions/.idea/link-saver-sessions.iml" />
     </modules>
   </component>
 </project>
