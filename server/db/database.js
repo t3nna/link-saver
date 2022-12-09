@@ -59,7 +59,7 @@ const conn = process.env.DB_STRING || 'mongodb://127.0.0.1:27017/link-saver';
 // }
 
 
-const connection = mongoose.createConnection(conn, {
+const connection = mongoose.connect(conn, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 });

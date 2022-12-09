@@ -2,6 +2,7 @@ const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy
 const connection = require('./database')
 const mongoose = require("mongoose");
+const {validPassword} = require("../utils/password");
 const User = mongoose.models.User
 
 const customFields = {
@@ -35,9 +36,9 @@ const verifyCallback = (username, password, done) => {
         })
 }
 
-const strategy = new LocalStrategy(customFields, verifyCallback)
+const strategy = new LocalStrategy( verifyCallback)
 
-passport.use(strategy)
+passport.use( strategy)
 
 passport.serializeUser((user, done) => {
     done(null, user.id);
