@@ -4,6 +4,8 @@ const MongoStore = require("connect-mongo")
 const mongoose = require("mongoose");
 const passport = require("passport");
 
+const {userData} = require("./controlers/userData")
+
 
 
 
@@ -111,7 +113,9 @@ app.get('/login', (req, res, next) => {
     res.send(form);
 
 });
+app.get('/user', isAuth, userData )
 
+app.get('ping', ping)
 // When you visit http://localhost:3000/register, you will see "Register Page"
 app.get('/register', (req, res, next) => {
 
