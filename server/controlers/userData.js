@@ -22,7 +22,7 @@ const  userData = (req, res, next) => {
         });
 
 
-        const User = mongoose.model('data', UserSchema);
+        const User = mongoose.model('datas', UserSchema);
 
         // const meUser = new User({
         //     user: 'abcd',

@@ -3,10 +3,9 @@ const session = require("express-session")
 const MongoStore = require("connect-mongo")
 const mongoose = require("mongoose");
 const passport = require("passport");
+const cors = require("cors")
 
 const {userData} = require("./controlers/userData")
-
-
 
 
 const {ping} = require("./controlers/ping");
@@ -17,7 +16,12 @@ const app = express()
 
 app.use(express.json())
 app.use(express.urlencoded({extended: true}));
-
+app.use(
+    cors({
+        origin: "http://localhost:3000", // <-- location of the react app were connecting to
+        credentials: true,
+    })
+);
 
 
 const conn = process.env.DB_STRING || 'mongodb://127.0.0.1:27017/link-saver';
@@ -33,12 +37,12 @@ app.use(session({
             useNewUrlParser: true,
             useUnifiedTopology: true
         },
-        ttl: 1000*60*60*24,
+        ttl: 1000 * 60 * 60 * 24,
 
 
     }),
     cookie: {
-        maxAge: 1000*60*60*24,
+        maxAge: 1000 * 60 * 60 * 24,
     }
 }))
 
@@ -63,13 +67,38 @@ app.use((req, res, next) => {
 const User = mongoose.model('User')
 
 
-
 app.get('/ping', ping)
-app.post('/login',(req, res, next) => {
-    console.log(req.body)
-    next();
-}, passport.authenticate('local', { failureRedirect: '/login-failure', successRedirect: '/login-success' })
-    );
+// app.post('/login', (req, res, next) => {
+//         console.log(req.body)
+//         next();
+//
+//     }, passport.authenticate('local', {
+//         failureRedirect: '/login-failure',
+//         successRedirect: '/login-success'
+//
+//     },
+//     // (req, res) => {
+//     //     console.log(req.body)
+//     //     console.log(req.user)
+//     //     res.redirect('/')
+//     // }
+//     )
+// );
+
+app.post("/login", (req, res, next) => {
+    passport.authenticate("local", (err, user, info) => {
+        if (err) throw err;
+        if (!user) res.send("No User Exists");
+        else {
+            req.logIn(user, (err) => {
+                if (err) throw err;
+                res.send("Successfully Authenticated");
+                console.log(req.user);
+            });
+        }
+    })(req, res, next);
+});
+
 
 app.post('/register', (req, res, next) => {
     console.log(req.body)
@@ -113,7 +142,7 @@ app.get('/login', (req, res, next) => {
     res.send(form);
 
 });
-app.get('/user', isAuth, userData )
+app.get('/user', isAuth, userData)
 
 app.get('ping', ping)
 // When you visit http://localhost:3000/register, you will see "Register Page"
@@ -158,7 +187,7 @@ app.get('/login-failure', (req, res, next) => {
 
 app.use(errorHandler)
 
-const PORT = 3000 || process.env.PORT
+const PORT = 4000 || process.env.PORT
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`)
